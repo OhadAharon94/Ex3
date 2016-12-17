@@ -13,13 +13,19 @@ typedef struct COMMAND_STRUCT {
 	char			*strBankID;
 	int				CommandType;
 	double			Money;
+	char			*strMoney;
 } CommandStruct;
+
+typedef struct THREAD_STRUCT {
+	CommandStruct				*command;
+	FILE						*LogOutput;
+} TrdStruct;
 
 void comand_line_to_strings(char** command_strings, char* command_line, int position)
 {
 	int i = 0;
 	char* temp_char = NULL; command_strings[position] = NULL;
-	int copy_length = 0;
+	size_t copy_length = 0;
 	if (command_line[strlen(command_line) - 1] == '\n')
 		command_line[strlen(command_line) - 1] = '\0';
 
@@ -54,7 +60,7 @@ CommandStruct* command_to_struct(FILE *infile)
 	char** command_strings = NULL;
 	int CommandType = 0;
 	CommandStruct* command = (CommandStruct*)malloc(sizeof(CommandStruct));
-	command->strBankID = NULL;
+	command->strBankID = NULL; command->strMoney = NULL;
 	command_line = (char*)malloc(sizeof(char) * MAX_COMMAND);
 	command_strings = (char**)malloc(sizeof(char*) * 3);
 	if (command_line == NULL || command_strings == NULL)
@@ -72,33 +78,35 @@ CommandStruct* command_to_struct(FILE *infile)
 
 	switch (CommandType)
 	{
-	case 0:
-	case 3:
-	case 4:
-		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[0] + 1));
-		strcpy(command->strBankID, command_strings[0]);
-		command->BankID = strtol(command_strings[1],&ptr,10);
+	case 0:/* "CreateAccount" */
+	case 3:/* "Deposit" */
+	case 4:/* "Withdrawal"*/
+		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[1] + 1));
+		strcpy(command->strBankID, command_strings[1]);
+		command->BankID = atoi(command_strings[1]);
 		command->CommandType = CommandType;
+		command->strMoney = (char*)malloc(sizeof(char)* strlen(command_strings[2] + 1));
+		strcpy(command->strMoney, command_strings[2]);
 		command->Money = atof(command_strings[2]);
 		break;
 
-	case 1:
-		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[0] + 1));
-		strcpy(command->strBankID, command_strings[0]);
+	case 1:/* "CloseAccoung" */
+		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[1] + 1));
+		strcpy(command->strBankID, command_strings[1]);
 		command->BankID = strtol(command_strings[1], &ptr, 10);
 		command->CommandType = CommandType;
 		command->Money = 0;
 		break;
 
-	case 2:
-		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[0] + 1));
-		strcpy(command->strBankID, command_strings[0]);
+	case 2:/*" "PrintBalances" */
+		command->strBankID = (char*)malloc(sizeof(char)* strlen(command_strings[1] + 1));
+		strcpy(command->strBankID, command_strings[1]);
 		command->BankID = 0;
 		command->CommandType = CommandType;
 		command->Money = 0;
 		break;
 
-	deafult:
+	default:
 		command->BankID = 0;
 		command->CommandType = -1;
 		command->Money = 0;
@@ -147,13 +155,14 @@ void MainThreadsManagment(FILE* infile)
 
 		case 4: /*   "Withdrawal"   */
 			break;
-		deafult:
+		default:
 			break;
 		}
+		printf("command type is: %d\n", command->CommandType);
 		printf("account num is: %d\n", command->BankID);
-		printf("command is: %d\n", command->CommandType);
-		printf("command string is: %s\n", command->strBankID);
-		printf("command money is: %f\n", command->Money);
+		printf("account string is: %s\n", command->strBankID);
+		printf("money is: %f\n", command->Money);
+		printf("string money is: %s\n", command->strMoney);
 	}
 
 	/*WaitForMultipleObjects(
