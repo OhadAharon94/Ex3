@@ -131,34 +131,32 @@ void MainThreadsManagment(FILE* infile)
 
 	while ((command = command_to_struct(infile)) != NULL)
 	{
+		switch (command->CommandType)
+		{
+		case 0: /*     "CreateAccount"   */
+			break;
+
+		case 1: /*   "CloseAccoung"   */
+			break;
+
+		case 2: /*   "PrintBalances"   */
+			break;
+
+		case 3: /*   "Deposit"   */
+			break;
+
+		case 4: /*   "Withdrawal"   */
+			break;
+		deafult:
+			break;
+		}
 		printf("account num is: %d\n", command->BankID);
 		printf("command is: %d\n", command->CommandType);
 		printf("command string is: %s\n", command->strBankID);
 		printf("command money is: %f\n", command->Money);
 	}
 
-	/*ThreadHandles[0] = CreateThreadSimple(
-		(LPTHREAD_START_ROUTINE)check_five_letters,
-		output,
-		&ThreadIDs[0]);
-
-	ThreadHandles[1] = CreateThreadSimple(
-		(LPTHREAD_START_ROUTINE)getExt,
-		output,
-		&ThreadIDs[1]);
-
-	ThreadHandles[2] = CreateThreadSimple(
-		(LPTHREAD_START_ROUTINE)getSize,
-		output,
-		&ThreadIDs[2]);
-
-	ThreadHandles[3] = CreateThreadSimple(
-		(LPTHREAD_START_ROUTINE)getFileTiming,
-		output,
-		&ThreadIDs[3]);
-
-
-	WaitForMultipleObjects(
+	/*WaitForMultipleObjects(
 		NUM_OF_THREADS,
 		ThreadHandles,
 		TRUE,
@@ -177,11 +175,8 @@ void MainThreadsManagment(FILE* infile)
 		GetExitCodeThread(ThreadHandles[i], &exitcode);
 		printf("Thread number %d returned exit code %d\n", i, exitcode);
 		CloseHandle(ThreadHandles[i]);
-	}
+	}*/
 
-	free(output_text);
-	Free_Infiles(files);
-	Free_Trdout(output);*/
 }
 
 void main(int argc, char* argv[])
