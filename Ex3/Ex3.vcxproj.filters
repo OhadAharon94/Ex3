@@ -18,5 +18,11 @@
     <ClCompile Include="Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="accounts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="prints.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
